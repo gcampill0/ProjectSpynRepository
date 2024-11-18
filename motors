@@ -1,0 +1,40 @@
+function motors(brick)
+x = 30;
+distance = brick.UltrasonicDist(4);
+reading = brick.TouchPressed(1);
+color = brick.ColorCode(3);
+while 1 
+    if color == 5
+        brick.StopMotor('AD',10);
+        pause(2);
+        brick.MoveMotor('AD', 20);
+    end
+    if color == 2
+        brick.StopMotor('AD',10);
+        brick.beep();
+        brick.beep();
+        brick.MoveMotor('AD', 20);
+    end
+    if color == 3
+        brick.StopMotor('AD',10);
+        brick.beep();
+        brick.beep();
+        brick.beep();
+        brick.MoveMotor('AD', 20);
+    end
+    if distance >= x
+        brick.MoveMotor('AD', 0);
+    end
+    if reading == 0
+        brick.MoveMotor('AD', 0);
+    end
+    brick.MoveMotor('AD', 20);
+    distance = brick.UltrasonicDist(4);
+    reading = brick.TouchPressed(1);
+    color = brick.ColorCode(3);
+    if reading == 1
+        brick.MoveMotor('AD', 10);
+    end
+end 
+
+end
