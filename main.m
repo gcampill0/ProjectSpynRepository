@@ -12,13 +12,11 @@ turned = false;
 turnReady = false;
 while true
     while true
-        display(green);
+        display(correctAngle);
         angle = brick.GyroAngle(4);
-        display(angle);
         touch = brick.TouchPressed(1);
         color = brick.ColorCode(3);
         distance = brick.UltrasonicDist(2);
-        %{
         if color == 5 && ~red
             red = true;
             brick.StopAllMotors('Brake');
@@ -27,16 +25,17 @@ while true
         elseif color ~= 5
             red = false;
         end
-        %}
-        if color == 4 && ~yellow
-            yellow = true;
+        if color == 3 && ~green
+            green = true;
             brick.StopAllMotors('Brake');
             break;
         elseif color ~= 4
-            yellow = false;
+            green = false;
         end
-        if color == 3 && ~green
-            green = true;
+        %Yellow is start and stop
+        %{
+        if color == 4 && ~yellow
+            yellow = true;
             brick.StopAllMotors('Brake');
             brick.playTone(100, 300, 250);
             pause(0.5);
@@ -44,8 +43,9 @@ while true
             pause(0.5);
             brick.playTone(100, 300, 250);
         elseif color ~= 3
-            green = false;
+            yellow = false;
         end
+        %}
         if color == 2 && ~blue
             blue = true;
             brick.StopAllMotors('Brake');
