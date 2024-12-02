@@ -55,6 +55,7 @@ while true
         elseif color ~= 2
             blue = false;
         end
+        %Maybe use an elseif statement for if it is blue or green to switch to keyboard control
         if true
             if angle - 10 < correctAngle && correctAngle < angle + 10
                 brick.MoveMotor('AD', -40);
