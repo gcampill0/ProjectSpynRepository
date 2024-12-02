@@ -3,22 +3,23 @@ disp("Start");
 open = false;
 correctAngle = 0;
 brick.GyroCalibrate(4);
-brick.SetColorMode(3, 2);
 red = false;
 green = false;
 yellow = false;
+firstYellow = false;
 blue = false;
-turned = false;
 turnReady = false;
-while true
+stopped = false;
+while ~stopped
     while true
-        display(correctAngle);
         angle = brick.GyroAngle(4);
         touch = brick.TouchPressed(1);
         color = brick.ColorCode(3);
         distance = brick.UltrasonicDist(2);
+        display(color)
         if color == 5 && ~red
             red = true;
+            turnReady = true;
             brick.StopAllMotors('Brake');
             brick.playTone(100, 200, 1000);
             pause(1);
@@ -32,7 +33,6 @@ while true
         elseif color ~= 4
             green = false;
         end
-        %Yellow is start and stop
         %{
         if color == 4 && ~yellow
             yellow = true;
@@ -42,42 +42,87 @@ while true
             brick.playTone(100, 300, 250);
             pause(0.5);
             brick.playTone(100, 300, 250);
-        elseif color ~= 3
+            if firstYellow
+                stopped = true;
+                break;
+            end
+        elseif color ~= 4
             yellow = false;
+            firstYellow = true;
         end
         %}
         if color == 2 && ~blue
             blue = true;
             brick.StopAllMotors('Brake');
-            brick.playTone(100, 300, 250);
-            pause(0.5);
-            brick.playTone(100, 300, 250);
+            break;
         elseif color ~= 2
             blue = false;
         end
-        %Maybe use an elseif statement for if it is blue or green to switch to keyboard control
         if true
             if angle - 10 < correctAngle && correctAngle < angle + 10
                 brick.MoveMotor('AD', -40);
             end
-            if correctAngle <= angle - 5
-                brick.MoveMotor('A', 15);
-                brick.MoveMotor('D', -15);
+            if correctAngle <= angle - 8
+                brick.MoveMotor('A', 20);
+                brick.MoveMotor('D', -20);
             end
-            if correctAngle >= angle + 5
-                brick.MoveMotor('A', -15);
-                brick.MoveMotor('D', 15);
+            if correctAngle >= angle + 8
+                brick.MoveMotor('A', -20);
+                brick.MoveMotor('D', 20);
             end
+            if 0 < distance && distance < 40
+                %turnReady = true;
+                if touch == 1
+                    brick.StopAllMotors('Brake');
+                    brick.MoveMotor('AD', 40);
+                    pause(0.75);
+                    correctAngle = correctAngle + 90;
+                end
+            elseif 60 < distance && distance < 100
+                if touch == 1
+                    brick.StopAllMotors('Brake');
+                    brick.MoveMotor('AD', 40);
+                    pause(0.75);
+                    correctAngle = correctAngle - 90;
+                elseif turnReady
+                    turnReady = false;
+                    pause(0.5);
+                    correctAngle = correctAngle - 90;
+                end
+            elseif 120 < distance && distance < 160
+                if touch == 1
+                    brick.StopAllMotors('Brake');
+                    brick.MoveMotor('AD', 40);
+                    pause(0.75);
+                    correctAngle = correctAngle - 90;
+                elseif turnReady
+                    turnReady = false;
+                    pause(0.5);
+                    correctAngle = correctAngle - 90;
+                end
+            elseif 200 < distance
+                if touch == 1
+                    brick.StopAllMotors('Brake');
+                    brick.MoveMotor('AD', 40);
+                    pause(0.75);
+                    correctAngle = correctAngle - 90;
+                elseif turnReady
+                    turnReady = false;
+                    pause(0.5);
+                    correctAngle = correctAngle - 90;
+                end
+            end
+            %{
             if touch == 1
                 turned = true;
                 brick.StopAllMotors();
                 brick.MoveMotor('AD', 50);
                 pause(0.75);
-                correctAngle = correctAngle + 90;
-                if distance >= 90
-                    correctAngle = correctAngle - 90;
-                else
+                %correctAngle = correctAngle + 90;
+                if distance >= 90 
                     correctAngle = correctAngle + 90;
+                else
+                    correctAngle = correctAngle - 90;
                 end
                 brick.StopAllMotors();
             end
@@ -91,10 +136,11 @@ while true
                 pause(0.5);
                 correctAngle = correctAngle - 90;
             end
+            %}
         end
     end
     InitKeyboard();
-    while true
+    while true && ~stopped
         pause(0.1);
         switch key
             case 'uparrow'
@@ -111,6 +157,7 @@ while true
                 brick.StopAllMotors();
             case 'q'
                 brick.GyroCalibrate(4);
+                correctAngle = 0;
                 break;
             case 'r'
                 brick.MoveMotor('C', 1);
