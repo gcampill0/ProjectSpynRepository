@@ -9,7 +9,7 @@ Manual Mode Controls:
 
 WARNING - Don't press two inputs at once or it will stop working.
 
-<Up Arrow - Forwards/>
+<br/>Up Arrow - Forwards
 <Down Arrow - Backwards/>
 <Left Arrow - Turn Left/>
 <Right Arrow - Turn Right/>
