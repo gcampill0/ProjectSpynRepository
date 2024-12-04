@@ -1,2 +1,2 @@
 brick = ConnectBrick('EV3P');
-brick.beep();
+brick.playTone(100, 300, 500);

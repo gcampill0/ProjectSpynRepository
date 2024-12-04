@@ -6,17 +6,18 @@ brick.GyroCalibrate(4);
 red = false;
 green = false;
 yellow = false;
-firstYellow = false;
+firstYellow = true;
 blue = false;
 turnReady = false;
 stopped = false;
+stillYellow = false;
 while ~stopped
     while true
         angle = brick.GyroAngle(4);
         touch = brick.TouchPressed(1);
         color = brick.ColorCode(3);
         distance = brick.UltrasonicDist(2);
-        display(color)
+        display(angle);
         if color == 5 && ~red
             red = true;
             turnReady = true;
@@ -33,7 +34,6 @@ while ~stopped
         elseif color ~= 4
             green = false;
         end
-        %{
         if color == 4 && ~yellow
             yellow = true;
             brick.StopAllMotors('Brake');
@@ -42,15 +42,19 @@ while ~stopped
             brick.playTone(100, 300, 250);
             pause(0.5);
             brick.playTone(100, 300, 250);
-            if firstYellow
-                stopped = true;
-                break;
+            if ~firstYellow && stillYellow
+                if color == 4
+                    stopped = true;
+                    break
+                end
+            else
+                stillYellow = true;
             end
         elseif color ~= 4
+            stillYellow = false;
             yellow = false;
-            firstYellow = true;
+            firstYellow = false;
         end
-        %}
         if color == 2 && ~blue
             blue = true;
             brick.StopAllMotors('Brake');
@@ -160,9 +164,11 @@ while ~stopped
                 correctAngle = 0;
                 break;
             case 'r'
-                brick.MoveMotor('C', 1);
+                brick.MoveMotor('C', 3);
+                pause(0.3);
             case 'f'
-                brick.MoveMotor('C', -1);
+                brick.MoveMotor('C', -3);
+                pause(0.3);
         end
     end
     CloseKeyboard();
