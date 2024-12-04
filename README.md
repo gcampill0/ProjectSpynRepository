@@ -10,9 +10,9 @@ Manual Mode Controls:
 WARNING - Don't press two inputs at once or it will stop working.
 
 <br/>Up Arrow - Forwards
-<Down Arrow - Backwards/>
-<Left Arrow - Turn Left/>
-<Right Arrow - Turn Right/>
-<R - Lift chair/>
-<F - Lower chair/>
-<Q - End manual mode/>
+<br/>Down Arrow - Backwards
+<br/>Left Arrow - Turn Left
+<br/>Right Arrow - Turn Right
+<br/>R - Lift chair
+<br/>F - Lower chair
+<br/>Q - End manual mode
