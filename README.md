@@ -8,6 +8,7 @@
 Manual Mode Controls:
 
 WARNING - Don't press two inputs at once or it will stop working.
+
 <br/>Up Arrow - Forwards
 <br/>Down Arrow - Backwards
 <br/>Left Arrow - Turn Left
